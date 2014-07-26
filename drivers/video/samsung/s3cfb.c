@@ -1069,6 +1069,9 @@ static int __devinit s3cfb_probe(struct platform_device *pdev)
 		ret = -EINVAL;
 		goto err_irq;
 	}
+	
+	if (fbdev->lcd->init_ldi) 
+			fbdev->lcd->init_ldi();
 
 #ifdef CONFIG_FB_S3C_LCD_INIT
 //#if defined(CONFIG_FB_S3C_TL2796)
@@ -1239,7 +1242,10 @@ void s3cfb_late_resume(struct early_suspend *h)
 	dev_dbg(fbdev->dev, "wake up from suspend\n");
 	if (pdata->cfg_gpio)
 		pdata->cfg_gpio(pdev);
-
+	if (fbdev->lcd->init_ldi)
+		fbdev->lcd->init_ldi();
+	else
+		printk("no init_ldi\n");
 	clk_enable(fbdev->clock);
 	s3cfb_init_global(fbdev);
 	s3cfb_set_clock(fbdev);

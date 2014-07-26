@@ -15,8 +15,8 @@
 
 #include <linux/input/matrix_keypad.h>
 
-#define SAMSUNG_MAX_ROWS	8
-#define SAMSUNG_MAX_COLS	8
+#define SAMSUNG_MAX_ROWS	4
+#define SAMSUNG_MAX_COLS	4
 
 /**
  * struct samsung_keypad_platdata - Platform device data for Samsung Keypad.

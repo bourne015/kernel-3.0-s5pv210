@@ -38,6 +38,7 @@ struct s3c_platform_fb {
 	void		(*cfg_gpio)(struct platform_device *dev);
 	int		(*backlight_on)(struct platform_device *dev);
 	int		(*backlight_onoff)(struct platform_device *dev, int onoff);
+	void		(*shutdown_gpio)(struct platform_device *dev);
 	int		(*reset_lcd)(struct platform_device *dev);
 	int		(*clk_on)(struct platform_device *pdev, struct clk **s3cfb_clk);
 	int		(*clk_off)(struct platform_device *pdev, struct clk **clk);

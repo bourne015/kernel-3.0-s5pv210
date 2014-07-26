@@ -82,6 +82,7 @@
 #include <plat/media.h>
 #include <mach/media.h>
 #include <mach/gpio-smdkc110.h>
+#include <mach/s5p-lcd.h>
 
 #ifdef CONFIG_TOUCHSCREEN_EGALAX
 #include <linux/i2c/egalax.h>
@@ -474,6 +475,12 @@ struct platform_device smdkv210_dm9000 = {
 	},
 };
 
+#ifdef CONFIG_FB_S3C_ILI9806E
+#define S5PV210_LCD_WIDTH 480
+#define S5PV210_LCD_HEIGHT 800
+#define NUM_BUFFER 4
+#endif
+
 #ifdef CONFIG_FB_S3C_LTE480WV
 #define S5PV210_LCD_WIDTH 800
 #define S5PV210_LCD_HEIGHT 480
@@ -724,7 +731,7 @@ static struct s3cfb_lcd lte480wv = {
                 .inv_vden = 0,
         },
 };
-#endif
+//#endif
 
 #ifdef CONFIG_FB_S3C_TL2796
 static struct s3cfb_lcd lte480wv = {
@@ -930,6 +937,7 @@ static struct s3c_platform_fb lte480wv_fb_data __initdata = {
         .backlight_onoff    = lte480wv_backlight_off,
         .reset_lcd      = lte480wv_reset_lcd,
 };
+#endif
 static int smdkv210_backlight_init(struct device *dev)
 {
 	int ret;
@@ -1538,8 +1546,12 @@ static void __init smdkv210_machine_init(void)
 
 	s3c_ide_set_platdata(&smdkv210_ide_pdata);
 
+
+#ifdef CONFIG_FB_S3C_ILI9806E
 //	s3c_fb_set_platdata(&smdkv210_lcd0_pdata);
-	s3c_fb_set_platdata(&lte480wv_fb_data);
+//	s3c_fb_set_platdata(&lte480wv_fb_data);
+	s3c_fb_set_platdata(&lcd_fb_data);
+#endif
 
 #ifdef CONFIG_S3C_DEV_HSMMC
         s3c_sdhci0_set_platdata(&smdkc110_hsmmc0_pdata);

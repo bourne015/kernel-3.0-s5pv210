@@ -47,3 +47,4 @@ obj-$(CONFIG_S5PV210_SETUP_CSIS)	+= setup-csis.o
 obj-$(CONFIG_S5PV210_SETUP_USB_PHY)	+= setup-usb-phy.o
 obj-$(CONFIG_CPU_FREQ)		        += dev-cpufreq.o
 obj-$(CONFIG_CPU_IDLE)          += cpuidle.o didle.o
+obj-$(CONFIG_FB_S3C_ILI9806E)       += s5p-lcd.o

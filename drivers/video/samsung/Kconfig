@@ -94,6 +94,13 @@ config FB_S3C_LTE480WV
 	---help---
 	  This enables support for Samsung LTE480WV 4.8\" WVGA LCD panel
 
+config FB_S3C_ILI9806E
+    bool "ILI9806E"
+	depends on FB_S3C
+	depends on (MACH_SMDKV210 || MACH_SMDKC110)
+	---help---
+	  This enables support for Samsung ILI9806E 4.0\" WVGA LCD panel
+
 config FB_S3C_101WA01S
 	bool "101WA01S"
 	---help---
