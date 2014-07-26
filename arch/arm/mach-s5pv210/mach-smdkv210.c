@@ -83,6 +83,7 @@
 #include <mach/media.h>
 #include <mach/gpio-smdkc110.h>
 #include <mach/s5p-lcd.h>
+#include <linux/mmc/host.h>
 
 #ifdef CONFIG_TOUCHSCREEN_EGALAX
 #include <linux/i2c/egalax.h>
@@ -1465,13 +1466,14 @@ static void __init smdkv210_map_io(void)
 
 #ifdef CONFIG_S3C_DEV_HSMMC
 static struct s3c_sdhci_platdata smdkc110_hsmmc0_pdata __initdata = {
-        .cd_type                = S3C_SDHCI_CD_INTERNAL,
+//        .cd_type                = S3C_SDHCI_CD_INTERNAL,
+		 .cd_type                = S3C_SDHCI_CD_NONE,
         //.wp_gpio                = S5PV210_GPH0(7),
         //.has_wp_gpio    = true,
-#if defined(CONFIG_S5PV210_SD_CH0_8BIT)
+//#if defined(CONFIG_S5PV210_SD_CH0_8BIT)
         .max_width              = 8,
         .host_caps              = MMC_CAP_8_BIT_DATA,
-#endif
+//#endif
 };      
 #endif
  
