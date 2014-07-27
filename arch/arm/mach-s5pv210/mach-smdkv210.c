@@ -1384,6 +1384,11 @@ static struct i2c_board_info smdkv210_i2c_devs1[] __initdata = {
                 I2C_BOARD_INFO("s5p_ddc", (0x74>>1)),
         },
 #endif	
+#ifdef CONFIG_TOUCHSCREEN_FT5X0X
+	{
+		I2C_BOARD_INFO("ft5x0x_ts", (0x70>>1)),
+	},
+#endif
 };
 
 static struct i2c_board_info smdkv210_i2c_devs2[] __initdata = {
