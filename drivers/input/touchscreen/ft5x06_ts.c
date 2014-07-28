@@ -598,6 +598,7 @@ static void ft5x0x_ts_release(void)
 	input_report_abs(data->input_dev, ABS_PRESSURE, 0);
 	input_report_key(data->input_dev, BTN_TOUCH, 0);
 #endif
+	input_report_key(data->input_dev, BTN_TOUCH, 0);
 	input_sync(data->input_dev);
 }
 
@@ -720,6 +721,7 @@ static void ft5x0x_report_value(void)
 			input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x5);
 			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y5);
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+			input_report_key(data->input_dev, BTN_TOUCH, 1);
 			input_mt_sync(data->input_dev);
 			ft5x06_ts_DEBUG("===x5 = %d,y5 = %d ====\n",event->x2,event->y2);
 		case 4:
@@ -727,6 +729,7 @@ static void ft5x0x_report_value(void)
 			input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x4);
 			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y4);
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+			input_report_key(data->input_dev, BTN_TOUCH, 1);
 			input_mt_sync(data->input_dev);
 			ft5x06_ts_DEBUG("===x4 = %d,y4= %d ====\n",event->x2,event->y2);
 		case 3:
@@ -734,6 +737,7 @@ static void ft5x0x_report_value(void)
 			input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x3);
 			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y3);
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+			input_report_key(data->input_dev, BTN_TOUCH, 1);
 			input_mt_sync(data->input_dev);
 			ft5x06_ts_DEBUG("===x3 = %d,y3 = %d ====\n",event->x2,event->y2);
 		case 2:
@@ -741,6 +745,7 @@ static void ft5x0x_report_value(void)
 			input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x2);
 			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y2);
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+			input_report_key(data->input_dev, BTN_TOUCH, 1);
 			input_mt_sync(data->input_dev);
 			ft5x06_ts_DEBUG("===x2 = %d,y2 = %d ====\n",event->x2,event->y2);
 		case 1:
@@ -748,6 +753,7 @@ static void ft5x0x_report_value(void)
 			input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->x1);
 			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->y1);
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+			input_report_key(data->input_dev, BTN_TOUCH, 1);
 			input_mt_sync(data->input_dev);
 			ft5x06_ts_DEBUG("===x1 = %d,y1 = %d ====\n",event->x1,event->y1);
 			break;
@@ -1002,6 +1008,7 @@ ft5x0x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 
 	set_bit(EV_ABS, input_dev->evbit);
 	set_bit(EV_KEY, input_dev->evbit);
+	set_bit(BTN_TOUCH, input_dev->keybit);
 	for (index = 0; index < GTP_MAX_KEY_NUM; index++)
       {
         input_set_capability(input_dev,EV_KEY,key_pos[index].value); 
