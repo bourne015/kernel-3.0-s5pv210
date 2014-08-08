@@ -1838,7 +1838,7 @@ retry_open:
 		extern struct tty_driver *console_driver;
 		driver = tty_driver_kref_get(console_driver);
 		index = fg_console;
-		noctty = 1;
+		noctty = 0;
 		goto got_driver;
 	}
 #endif
@@ -1849,7 +1849,7 @@ retry_open:
 			if (driver) {
 				/* Don't let /dev/console block */
 				filp->f_flags |= O_NONBLOCK;
-				noctty = 1;
+				noctty = 0;
 				goto got_driver;
 			}
 		}
@@ -1900,7 +1900,7 @@ got_driver:
 	check_tty_count(tty, "tty_open");
 	if (tty->driver->type == TTY_DRIVER_TYPE_PTY &&
 	    tty->driver->subtype == PTY_TYPE_MASTER)
-		noctty = 1;
+		noctty = 0;
 #ifdef TTY_DEBUG_HANGUP
 	printk(KERN_DEBUG "opening %s...", tty->name);
 #endif
