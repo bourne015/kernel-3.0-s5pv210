@@ -1638,9 +1638,11 @@ void mmc_rescan(struct work_struct *work)
 	 * if there is a _removable_ card registered, check whether it is
 	 * still present
 	 */
+	printk("%s host->bus_dead = %d  host->bus_ops = %x,  host->bus_refs = %d\n", mmc_hostname(host), host->bus_dead,  host->bus_ops, host->bus_refs);
 	if (host->bus_ops && host->bus_ops->detect && !host->bus_dead
-	    && !(host->caps & MMC_CAP_NONREMOVABLE))
+		&& (!(host->caps & MMC_CAP_NONREMOVABLE) || (!memcmp(mmc_hostname(host), "mmc3", 4)))){
 		host->bus_ops->detect(host);
+	}
 
 	/* If the card was removed the bus will be marked
 	 * as dead - extend the wakelock so userspace

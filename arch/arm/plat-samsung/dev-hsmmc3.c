@@ -42,6 +42,9 @@ static struct resource s3c_hsmmc3_resource[] = {
 static u64 s3c_device_hsmmc3_dmamask = 0xffffffffUL;
 
 struct s3c_sdhci_platdata s3c_hsmmc3_def_platdata = {
+#if defined(CONFIG_WIFI_CONTROL_FUNC)
+	.cd_type = S3C_SDHCI_CD_PERMANENT,
+#endif
 	.max_width	= 4,
 	.host_caps	= (MMC_CAP_4_BIT_DATA |
 			   MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED),

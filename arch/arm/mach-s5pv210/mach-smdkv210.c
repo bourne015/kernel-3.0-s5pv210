@@ -366,10 +366,16 @@ static struct s3c_ide_platdata smdkv210_ide_pdata __initdata = {
 
 static uint32_t smdkv210_keymap[] __initdata = {
 	/* KEY(row, col, keycode) */
+/*
 	KEY(0, 3, KEY_1), KEY(0, 4, KEY_2), KEY(0, 5, KEY_3),
 	KEY(0, 6, KEY_4), KEY(0, 7, KEY_5),
 	KEY(1, 3, KEY_A), KEY(1, 4, KEY_B), KEY(1, 5, KEY_C),
 	KEY(1, 6, KEY_D), KEY(1, 7, KEY_E), KEY(7, 1, KEY_LEFTBRACE)
+*/
+	KEY(3, 3, KEY_1), KEY(2, 3, KEY_2), KEY(1, 3, KEY_3), KEY(1, 3, KEY_RESERVED),
+	KEY(3, 2, KEY_4), KEY(2, 2, KEY_5), KEY(1, 2, KEY_6), KEY(1, 2, KEY_CANCEL),
+	KEY(3, 1, KEY_7), KEY(2, 1, KEY_8), KEY(1, 1, KEY_9), KEY(1, 2, KEY_CLEAR),
+	KEY(3, 0, KEY_NUMERIC_STAR), KEY(2, 0, KEY_0), KEY(1, 0, KEY_NUMERIC_POUND),KEY(0, 0, KEY_ENTER)
 };
 
 static struct matrix_keymap_data smdkv210_keymap_data __initdata = {
@@ -379,8 +385,8 @@ static struct matrix_keymap_data smdkv210_keymap_data __initdata = {
 
 static struct samsung_keypad_platdata smdkv210_keypad_data __initdata = {
 	.keymap_data	= &smdkv210_keymap_data,
-	.rows		= 8,
-	.cols		= 8,
+	.rows		= 4,
+	.cols		= 4,
 };
 
 static struct resource smdkv210_dm9000_resources[] = {
@@ -981,6 +987,11 @@ static struct platform_device smdkv210_backlight_device = {
 	},
 };
 
+static struct platform_device bt_device_rfkill = {
+	.name	= "bt_rfkill",
+	.id	= -1,
+};
+
 struct s3c_adc_mach_info {
         /* if you need to use some platform data, add in here*/
         int delay;
@@ -1071,6 +1082,7 @@ static struct platform_device *smdkv210_devices[] __initdata = {
         &s5p_device_cec,
         &s5p_device_hpd,
 #endif
+	&bt_device_rfkill,
 };
 /*
  * External camera reset
@@ -1496,6 +1508,17 @@ static void __init smdkc110_setup_clocks(void)
         pr_info("%s: %s: source is %s, rate is %ld\n",
                                 __func__, clk->name, clk->parent->name,
                                 clk_get_rate(clk));
+#if 0//def CONFIG_S3C_DEV_HSMMC3
+	/* set MMC3 clock */
+	clk = clk_get(&s3c_device_hsmmc3.dev, "sclk_mmc");
+	pclk = clk_get(NULL, "mout_mpll");
+	clk_set_parent(clk, pclk);
+	clk_set_rate(clk, 50*MHZ);
+
+	pr_info("%s: %s: source is %s, rate is %ld\n",
+				__func__, clk->name, clk->parent->name,
+			 clk_get_rate(clk));
+#endif
 }
 /* USB EHCI */
 static struct s5p_ehci_platdata smdkv210_ehci_pdata;

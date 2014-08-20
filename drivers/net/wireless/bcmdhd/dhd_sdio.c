@@ -145,6 +145,15 @@ extern void bcmsdh_set_irq(int flag);
 extern void dhd_wlfc_txcomplete(dhd_pub_t *dhd, void *txp, bool success);
 #endif
 
+#ifdef _USI_NVRAM_FILE
+typedef int (*funcptr)(void *bus, bool write, uint32 address, uint8 *data, uint size);
+extern int ug_nvram(bcmsdh_info_t *sdh,osl_t *osh, void *nvram, int len);
+extern int ug_fw_prepare(void *sdh, void *osh, uint8 *memptr, uint32 memlen
+    , uint32 bus_ramsize, void *image, void **priv);
+extern int ug_fw_download(uint8 *memptr, uint32 memlen,funcptr funcp, void *bus, void *priv);
+extern int ug_fw_close(void *osh, void *priv);
+#endif /* _USI_NVRAM_FILE */
+
 #ifdef DHD_DEBUG
 /* Device console log buffer state */
 #define CONSOLE_LINE_MAX	192
@@ -5928,8 +5937,10 @@ static int
 dhdsdio_download_code_file(struct dhd_bus *bus, char *pfw_path)
 {
 	int bcmerror = -1;
+#ifndef _USI_NVRAM_FILE
 	int offset = 0;
 	uint len;
+#endif /* _US_NVRAM_FILE */
 	void *image = NULL;
 	uint8 *memblock = NULL, *memptr;
 
@@ -5948,6 +5959,26 @@ dhdsdio_download_code_file(struct dhd_bus *bus, char *pfw_path)
 		memptr += (DHD_SDALIGN - ((uint32)(uintptr)memblock % DHD_SDALIGN));
 
 	/* Download image */
+#ifdef _USI_NVRAM_FILE
+	{
+	int ret = -1;
+	void *priv;
+
+	ret = ug_fw_prepare(bus->sdh, bus->dhd->osh, memptr, MEMBLOCK, bus->ramsize, image, &priv);
+	if ( ret < 0 ) {
+	    DHD_ERROR(("%s: prepare F/W fail ret=%d\n", __FUNCTION__, ret));
+            goto err;
+	}
+
+	/* int ug_fw_download(uint8 *memptr, uint32 memlen,funcptr funcp, void *bus, void *priv);*/
+	bcmerror = ug_fw_download(memptr, MEMBLOCK, (funcptr)dhdsdio_membytes, (void *)bus, priv);
+
+	if (bcmerror < 0)
+	    DHD_ERROR(("%s: bcmerror=%d\n", __FUNCTION__, bcmerror));
+
+	ret = ug_fw_close(bus->dhd->osh, priv);
+	}
+#else /* !_USI_NVRAM_FILE */
 	while ((len = dhd_os_get_image_block((char*)memptr, MEMBLOCK, image))) {
 		bcmerror = dhdsdio_membytes(bus, TRUE, offset, memptr, len);
 		if (bcmerror) {
@@ -5958,6 +5989,7 @@ dhdsdio_download_code_file(struct dhd_bus *bus, char *pfw_path)
 
 		offset += MEMBLOCK;
 	}
+#endif /* !_USI_NVRAM_FILE */
 
 err:
 	if (memblock)
@@ -6028,6 +6060,15 @@ dhdsdio_download_nvram(struct dhd_bus *bus)
 		ASSERT(len <= MAX_NVRAMBUF_SIZE);
 		memcpy(memblock, bus->nvram_params, len);
 	}
+#ifdef _USI_NVRAM_FILE
+	{
+	int ret = 0;
+	ret = ug_nvram(bus->sdh, bus->dhd->osh, memblock, len);
+#ifdef DHD_DEBUG
+	DHD_ERROR (("%s: ret=%d\n", __FUNCTION__, ret));
+#endif /* DHD_DEBUG */
+	}
+#endif /* _USI_NVRAM_FILE */
 	if (len > 0 && len < MAX_NVRAMBUF_SIZE) {
 		bufp = (char *)memblock;
 		bufp[len] = 0;

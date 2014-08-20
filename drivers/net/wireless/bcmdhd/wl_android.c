@@ -682,7 +682,8 @@ int wifi_get_irq_number(unsigned long *irq_flags_ptr)
 		return (int)wifi_irqres->start;
 	}
 #ifdef CUSTOM_OOB_GPIO_NUM
-	return CUSTOM_OOB_GPIO_NUM;
+	return IRQ_EINT(15);
+	//return CUSTOM_OOB_GPIO_NUM;
 #else
 	return -1;
 #endif

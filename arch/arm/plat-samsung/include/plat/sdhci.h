@@ -98,6 +98,7 @@ extern void s3c_sdhci0_set_platdata(struct s3c_sdhci_platdata *pd);
 extern void s3c_sdhci1_set_platdata(struct s3c_sdhci_platdata *pd);
 extern void s3c_sdhci2_set_platdata(struct s3c_sdhci_platdata *pd);
 extern void s3c_sdhci3_set_platdata(struct s3c_sdhci_platdata *pd);
+extern void sdhci_s3c_force_presence_change(struct platform_device *pdev);
 
 /* Default platform data, exported so that per-cpu initialisation can
  * set the correct one when there are more than one cpu type selected.

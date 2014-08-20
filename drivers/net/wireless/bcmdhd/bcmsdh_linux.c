@@ -634,9 +634,9 @@ void bcmsdh_set_irq(int flag)
 		sdhcinfo->oob_irq_enable_flag = flag;
 		if (flag) {
 			enable_irq(sdhcinfo->oob_irq);
-			enable_irq_wake(sdhcinfo->oob_irq);
+			//enable_irq_wake(sdhcinfo->oob_irq);
 		} else {
-			disable_irq_wake(sdhcinfo->oob_irq);
+			//disable_irq_wake(sdhcinfo->oob_irq);
 			disable_irq(sdhcinfo->oob_irq);
 		}
 	}

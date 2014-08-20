@@ -38,7 +38,27 @@ void s5pv210_setup_sdhci_cfg_card(struct platform_device *dev,
 {
 	u32 ctrl2, ctrl3;
 
-	/* don't need to alter anything according to card-type */
+#if defined(CONFIG_WIFI_CONTROL_FUNC)
+	if(dev->id == 3) // wifi(3) and mmc uses different setting in v210
+	{
+	ctrl2 = readl(r + S3C_SDHCI_CONTROL2);
+	ctrl2 &= S3C_SDHCI_CTRL2_SELBASECLK_MASK;
+	ctrl2 |= (S3C64XX_SDHCI_CTRL2_ENSTAASYNCCLR |
+		  S3C64XX_SDHCI_CTRL2_ENCMDCNFMSK |
+		  S3C_SDHCI_CTRL2_DFCNT_NONE |
+		  S3C_SDHCI_CTRL2_ENCLKOUTHOLD);
+
+        if (ios)
+		if (ios->clock > 400000)
+			ctrl2 |= S3C_SDHCI_CTRL2_ENFBCLKRX;
+	ctrl3 = 0;
+	writel(ctrl2, r + S3C_SDHCI_CONTROL2);
+	writel(ctrl3, r + S3C_SDHCI_CONTROL3);
+	}
+	else
+#endif
+	{
+	/* don't need to alter anything acording to card-type */
 
 	writel(S3C64XX_SDHCI_CONTROL4_DRIVE_9mA, r + S3C64XX_SDHCI_CONTROL4);
 
@@ -60,4 +80,5 @@ void s5pv210_setup_sdhci_cfg_card(struct platform_device *dev,
 
 	writel(ctrl2, r + S3C_SDHCI_CONTROL2);
 	writel(ctrl3, r + S3C_SDHCI_CONTROL3);
+	}
 }
