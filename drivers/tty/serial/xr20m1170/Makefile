@@ -1,0 +1,1 @@
+obj-y	+= xr20m1170.o 1170.o gpio_i2c.o

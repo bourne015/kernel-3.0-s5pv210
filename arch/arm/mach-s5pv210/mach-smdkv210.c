@@ -992,6 +992,11 @@ static struct platform_device bt_device_rfkill = {
 	.id	= -1,
 };
 
+struct platform_device xr20m1170_uart = {
+	.name		= "xr20m1170-uart",
+	.id		= 0,
+};
+
 struct s3c_adc_mach_info {
         /* if you need to use some platform data, add in here*/
         int delay;
@@ -1083,6 +1088,7 @@ static struct platform_device *smdkv210_devices[] __initdata = {
         &s5p_device_hpd,
 #endif
 	&bt_device_rfkill,
+	&xr20m1170_uart,
 };
 /*
  * External camera reset
@@ -1388,6 +1394,7 @@ static void __init smdkv210_dm9000_init(void)
 static struct i2c_board_info smdkv210_i2c_devs0[] __initdata = {
 	{ I2C_BOARD_INFO("24c08", 0x50), },     /* Samsung S524AD0XD1 */
 	{ I2C_BOARD_INFO("wm8580", 0x1b), },
+	{ I2C_BOARD_INFO("i2c_xr20m1170", (0x6A>>1)), },
 };
 
 static struct i2c_board_info smdkv210_i2c_devs1[] __initdata = {

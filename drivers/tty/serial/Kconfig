@@ -1635,4 +1635,10 @@ config SERIAL_XILINX_PS_UART_CONSOLE
 	help
 	  Enable a Xilinx PS UART port to be the system console.
 
+config XR20M1170
+    bool "I2C to UART XR20M1170"
+	default y
+	help
+		I2C to UART driver of XR20M1170
+
 endmenu
