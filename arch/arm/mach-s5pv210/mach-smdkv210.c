@@ -48,6 +48,10 @@
 #undef	CAM_ITU_CH_A
 #define	CAM_ITU_CH_B
 #endif
+#ifdef CONFIG_VIDEO_HM5065
+#include <media/hm5065_platform.h>
+#define	CAM_ITU_CH_A
+#endif
 #include <plat/regs-serial.h>
 #include <plat/regs-srom.h>
 #include <plat/gpio-cfg.h>
@@ -1333,6 +1337,93 @@ static struct s3c_platform_camera s5k4ea = {
 };
 #endif
 
+#ifdef CONFIG_VIDEO_HM5065
+
+//#define CAM_POWER	S5PV210_MP07(0)
+//#define CAM_RESET	S5PV210_GPE1(4)
+
+static int hm5065_power_en(int onoff)
+{
+	int err;
+
+	err = gpio_request(CAM_POWER, "MP07_0");
+	if (err){
+		printk(KERN_ERR "failed to request MP07_0 for CAM 1V5/2V8\n");
+		return -1;
+	}
+	err = gpio_request(CAM_RESET, "GPE1_4");
+	if (err){
+		printk(KERN_ERR "failed to request GPE1_4 for CAM 1V5/2V8\n");
+		return -1;
+	}
+
+	if(onoff){
+		gpio_direction_output(CAM_POWER, 1);
+		gpio_direction_output(CAM_RESET, 0);
+		msleep(10);
+		gpio_direction_output(CAM_RESET, 1);
+		msleep(30);
+	}else{
+		gpio_direction_output(CAM_POWER, 0);
+		gpio_direction_output(CAM_RESET, 0);
+	}
+	gpio_free(CAM_RESET);
+	gpio_free(CAM_POWER);
+
+	printk("hm5065: power0 %s\n", onoff ? "ON" : "Off");
+	return 0;
+}
+
+static struct hm5065_platform_data hm5065_plat = {
+	.default_width = 2592,
+	.default_height = 1920,
+	.pixelformat = V4L2_PIX_FMT_YUYV,
+	.freq = 24000000,
+	.is_mipi = 0,
+};
+
+static struct i2c_board_info  hm5065_i2c_info = {
+	I2C_BOARD_INFO("HM5065", 0x1f),   //0x3E >> 1
+	.platform_data = &hm5065_plat,
+};
+
+static struct s3c_platform_camera hm5065 = {
+#ifdef CAM_ITU_CH_A
+	.id		= CAMERA_PAR_A,
+#else
+	.id		= CAMERA_PAR_B,
+#endif
+	.type		= CAM_TYPE_ITU,
+	.fmt		= ITU_601_YCBCR422_8BIT,
+	.order422	= CAM_ORDER422_8BIT_YCBYCR,
+	.i2c_busnum	= 0,
+	.info		= &hm5065_i2c_info,
+	.pixelformat= V4L2_PIX_FMT_YUYV,
+	.srclk_name	= "mout_mpll",
+	.clk_name	= "sclk_cam1",
+	/* .clk_name	= "sclk_cam1", */
+	.clk_rate	= 24000000,
+	.line_length	= 1920,
+	.width		= 2560,
+	.height		= 1920,
+	.window		= {
+		.left	= 0,
+		.top	= 0,
+		.width	= 2560,
+		.height	= 1920,
+	},
+
+	/* Polarity */
+	.inv_pclk	= 1,
+	.inv_vsync	= 1,
+	.inv_href	= 1,
+	.inv_hsync	= 1,
+
+	.initialized	= 0,
+	.cam_power	= hm5065_power_en,
+};
+#endif
+
 /* Interface setting */
 static struct s3c_platform_fimc fimc_plat_lsi = {
 	.srclk_name	= "mout_mpll",
@@ -1360,6 +1451,9 @@ static struct s3c_platform_fimc fimc_plat_lsi = {
 #endif
 #ifdef CONFIG_VIDEO_S5K4EA
 			&s5k4ea,
+#endif
+#ifdef CONFIG_VIDEO_HM5065
+			&hm5065,
 #endif
 	},
 	.hw_ver		= 0x43,
@@ -1600,9 +1694,9 @@ static void __init smdkv210_machine_init(void)
         s3c_fimc1_set_platdata(&fimc_plat_lsi);
         s3c_fimc2_set_platdata(&fimc_plat_lsi);
 #ifdef CAM_ITU_CH_A
-	smdkv210_cam0_power(1);
+	//smdkv210_cam0_power(1);
 #else
-	smdkv210_cam1_power(1);
+	//smdkv210_cam1_power(1);
 #endif
 #endif
 #ifdef CONFIG_VIDEO_FIMC_MIPI

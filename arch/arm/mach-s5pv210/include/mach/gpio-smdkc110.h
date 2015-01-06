@@ -10,6 +10,11 @@
 #define GPIO_WLAN_BT_EN  S5PV210_GPC1(0)
 #define GPIO_WLAN_EN  S5PV210_GPH2(5)
 
+//camera
+#define CAM_POWER	S5PV210_GPC1(4)
+#define CAM_RESET	S5PV210_GPE1(4)
+#define CAM_FLASH    S5PV210_GPC1(2)
+
 #define BT_UART_ID				1
 #define GPIO_BT_RXD			S5PV210_GPA0(4)
 #define GPIO_BT_RXD_AF			2
