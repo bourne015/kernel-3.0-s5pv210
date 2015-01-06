@@ -32,7 +32,7 @@ static struct resource samsung_keypad_resources[] = {
 };
 
 struct platform_device samsung_device_keypad = {
-	.name		= "samsung-keypad",
+	.name		= "s3c-keypad",
 	.id		= -1,
 	.num_resources	= ARRAY_SIZE(samsung_keypad_resources),
 	.resource	= samsung_keypad_resources,

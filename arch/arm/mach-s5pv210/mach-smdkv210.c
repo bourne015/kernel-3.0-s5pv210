@@ -376,9 +376,9 @@ static uint32_t smdkv210_keymap[] __initdata = {
 	KEY(1, 3, KEY_A), KEY(1, 4, KEY_B), KEY(1, 5, KEY_C),
 	KEY(1, 6, KEY_D), KEY(1, 7, KEY_E), KEY(7, 1, KEY_LEFTBRACE)
 */
-	KEY(3, 3, KEY_1), KEY(2, 3, KEY_2), KEY(1, 3, KEY_3), KEY(1, 3, KEY_RESERVED),
-	KEY(3, 2, KEY_4), KEY(2, 2, KEY_5), KEY(1, 2, KEY_6), KEY(1, 2, KEY_CANCEL),
-	KEY(3, 1, KEY_7), KEY(2, 1, KEY_8), KEY(1, 1, KEY_9), KEY(1, 2, KEY_CLEAR),
+	KEY(3, 3, KEY_1), KEY(2, 3, KEY_2), KEY(1, 3, KEY_3), KEY(0, 3, KEY_RESERVED),
+	KEY(3, 2, KEY_4), KEY(2, 2, KEY_5), KEY(1, 2, KEY_6), KEY(0, 2, KEY_CANCEL),
+	KEY(3, 1, KEY_7), KEY(2, 1, KEY_8), KEY(1, 1, KEY_9), KEY(0, 1, KEY_CLEAR),
 	KEY(3, 0, KEY_NUMERIC_STAR), KEY(2, 0, KEY_0), KEY(1, 0, KEY_NUMERIC_POUND),KEY(0, 0, KEY_ENTER)
 };
 
