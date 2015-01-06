@@ -222,6 +222,174 @@ static struct s3c_gpio_chip s5pv210_gpio_4bit[] = {
 			.label	= "MP05",
 		},
 	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP06(0),
+			.ngpio	= S5PV210_GPIO_MP06_NR,
+			.label	= "MP06",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP07(0),
+			.ngpio	= S5PV210_GPIO_MP07_NR,
+			.label	= "MP07",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP10(0),
+			.ngpio	= S5PV210_GPIO_MP10_NR,
+			.label	= "MP10",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP11(0),
+			.ngpio	= S5PV210_GPIO_MP11_NR,
+			.label	= "MP11",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP12(0),
+			.ngpio	= S5PV210_GPIO_MP12_NR,
+			.label	= "MP12",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP13(0),
+			.ngpio	= S5PV210_GPIO_MP13_NR,
+			.label	= "MP13",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP14(0),
+			.ngpio	= S5PV210_GPIO_MP14_NR,
+			.label	= "MP14",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP15(0),
+			.ngpio	= S5PV210_GPIO_MP15_NR,
+			.label	= "MP15",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP16(0),
+			.ngpio	= S5PV210_GPIO_MP16_NR,
+			.label	= "MP16",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP17(0),
+			.ngpio	= S5PV210_GPIO_MP17_NR,
+			.label	= "MP17",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP18(0),
+			.ngpio	= S5PV210_GPIO_MP18_NR,
+			.label	= "MP18",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP20(0),
+			.ngpio	= S5PV210_GPIO_MP20_NR,
+			.label	= "MP20",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP21(0),
+			.ngpio	= S5PV210_GPIO_MP21_NR,
+			.label	= "MP21",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP22(0),
+			.ngpio	= S5PV210_GPIO_MP22_NR,
+			.label	= "MP22",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP23(0),
+			.ngpio	= S5PV210_GPIO_MP23_NR,
+			.label	= "MP23",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP24(0),
+			.ngpio	= S5PV210_GPIO_MP24_NR,
+			.label	= "MP24",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP25(0),
+			.ngpio	= S5PV210_GPIO_MP25_NR,
+			.label	= "MP25",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP26(0),
+			.ngpio	= S5PV210_GPIO_MP26_NR,
+			.label	= "MP26",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP27(0),
+			.ngpio	= S5PV210_GPIO_MP27_NR,
+			.label	= "MP27",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_MP28(0),
+			.ngpio	= S5PV210_GPIO_MP28_NR,
+			.label	= "MP28",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_ETC0(0),
+			.ngpio	= S5PV210_GPIO_ETC0_NR,
+			.label	= "ETC0",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_ETC1(0),
+			.ngpio	= S5PV210_GPIO_ETC1_NR,
+			.label	= "ETC1",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_ETC2(0),
+			.ngpio	= S5PV210_GPIO_ETC2_NR,
+			.label	= "ETC2",
+		},
+	}, {
+		.config	= &gpio_cfg_noint,
+		.chip	= {
+			.base	= S5PV210_ETC4(0),
+			.ngpio	= S5PV210_GPIO_ETC4_NR,
+			.label	= "ETC4",
+		},
+	}, {
 		.base	= (S5P_VA_GPIO + 0xC00),
 		.config	= &gpio_cfg_noint,
 		.irq_base = IRQ_EINT(0),

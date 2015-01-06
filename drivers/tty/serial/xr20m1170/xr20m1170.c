@@ -741,9 +741,9 @@ static int serial_xr20m1170_startup(struct uart_port *port)
 //		gpio_free(M1170_RST);
 //		return err;
 //	}
-//	gpio_direction_output(M1170_RST, 0);
-//	msleep(3);
-//	gpio_direction_output(M1170_RST, 1);
+	gpio_direction_output(M1170_RST, 0);
+	msleep(3);
+	gpio_direction_output(M1170_RST, 1);
 //}
 //	xr20m1170_check_chip();
 	up->mcr = 0;

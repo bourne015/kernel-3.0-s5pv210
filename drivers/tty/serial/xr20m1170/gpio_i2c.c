@@ -16,7 +16,7 @@
 #if DEBUG_MSG_XR20M1170
 unsigned int BitDelayTimeout = 0x100;
 #else
-unsigned int BitDelayTimeout = 0x25;
+unsigned int BitDelayTimeout = 0x55;
 #endif
 static void BitDelay(void)
 {
