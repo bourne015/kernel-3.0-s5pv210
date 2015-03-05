@@ -263,4 +263,10 @@ config HAVE_RFKILL_POWER_SWITCH
         help
           Enables  power control function, need RFKILL
 
+config S5P_ADC
+        bool    "S5PXXXX ADC driver"
+        depends on PLAT_S5P
+        default y
+        help
+          ADC ( A/D Conversion ) driver for Samsung S5PXXXX
 endif

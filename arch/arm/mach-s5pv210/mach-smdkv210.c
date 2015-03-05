@@ -59,7 +59,8 @@
 #include <plat/s5pv210.h>
 #include <plat/devs.h>
 #include <plat/cpu.h>
-#include <plat/adc.h>
+//#include <plat/adc.h>
+#include <mach/adc.h>
 #include <plat/ts.h>
 #include <plat/ata.h>
 #include <plat/iic.h>
@@ -1006,12 +1007,22 @@ struct platform_device xr20m1170_uart = {
 	.id		= 0,
 };
 
+#ifndef CONFIG_S5P_ADC
 struct s3c_adc_mach_info {
         /* if you need to use some platform data, add in here*/
         int delay;
         int presc;
         int resolution;
 };
+#endif
+#ifdef CONFIG_S5P_ADC
+static struct s3c_adc_mach_info s3c_adc_platform __initdata = {
+	/* s5pc110 support 12-bit resolution */
+	.delay  = 10000,
+	.presc  = 49,
+	.resolution = 12,
+};
+#endif
 
 static struct platform_device *smdkv210_devices[] __initdata = {
 	&s3c_device_adc,
@@ -1691,6 +1702,10 @@ static void __init smdkv210_machine_init(void)
 
 #ifdef CONFIG_S3C_DEV_HSMMC
         s3c_sdhci0_set_platdata(&smdkc110_hsmmc0_pdata);
+#endif
+
+#if defined(CONFIG_S5P_ADC)
+	s3c_adc_set_platdata(&s3c_adc_platform);
 #endif
 
 #ifdef CONFIG_VIDEO_FIMC

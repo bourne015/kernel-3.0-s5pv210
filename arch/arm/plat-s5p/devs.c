@@ -12,6 +12,7 @@
 
 #include <linux/gpio.h>
 #include <linux/platform_device.h>
+#include <linux/slab.h>
 
 #include <mach/irqs.h>
 #include <mach/map.h>
@@ -22,6 +23,7 @@
 #include <plat/media.h>
 #include <plat/jpeg.h>
 #include <mach/media.h>
+#include <mach/adc.h>
 #if defined(CONFIG_VIDEO_FIMC) || defined(CONFIG_CPU_FREQ) /* TODO: use existing dev */
 static struct resource s3c_fimc0_resource[] = {
 	[0] = {
@@ -385,3 +387,44 @@ struct platform_device s5p_device_hpd = {
 	.name           = "s5p-hpd",
 	.id             = -1,
 };
+
+#ifdef CONFIG_S5P_ADC
+/* ADCTS */
+static struct resource s3c_adc_resource[] = {
+	[0] = {
+		.start = SAMSUNG_PA_ADC,
+		.end   = SAMSUNG_PA_ADC + SZ_4K - 1,
+		.flags = IORESOURCE_MEM,
+	},
+	[1] = {
+		.start = IRQ_PENDN,
+		.end   = IRQ_PENDN,
+		.flags = IORESOURCE_IRQ,
+	},
+	[2] = {
+		.start = IRQ_ADC,
+		.end   = IRQ_ADC,
+		.flags = IORESOURCE_IRQ,
+	}
+};
+
+struct platform_device s3c_device_adc1 = {
+	.name		  = "s3c-adc",
+	.id               = -1,
+	.num_resources	  = ARRAY_SIZE(s3c_adc_resource),
+	.resource	  = s3c_adc_resource,
+};
+
+void __init s3c_adc_set_platdata(struct s3c_adc_mach_info *pd)
+{
+	struct s3c_adc_mach_info *npd;
+
+	npd = kmalloc(sizeof(*npd), GFP_KERNEL);
+	if (npd) {
+		memcpy(npd, pd, sizeof(*npd));
+		s3c_device_adc1.dev.platform_data = npd;
+	} else {
+		printk(KERN_ERR "no memory for ADC platform data\n");
+	}
+}
+#endif /* CONFIG_S5P_ADC */

@@ -52,3 +52,4 @@ obj-$(CONFIG_WIFI_CONTROL_FUNC)		+= bcm4330-wlan.o
 obj-$(CONFIG_MACH_SMDKV210)		+= bcm4330-bt.o
 obj-$(CONFIG_HAVE_RFKILL_POWER_SWITCH)	+= wwan-rfkill.o
 obj-$(CONFIG_HAVE_MODEM_PM)		+= modem-pm.o
+obj-$(CONFIG_S5P_ADC) 			+= adc.o
