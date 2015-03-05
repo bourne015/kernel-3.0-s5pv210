@@ -73,6 +73,10 @@ config S5PV210_POWER_DOMAIN
 	help
 	  Enable S5PV210 power domain support.
 
+config HAVE_MODEM_PM
+        bool "hold modem pm"
+        default y
+
 menu "S5PC110 Machines"
 
 config MACH_AQUILA
@@ -252,4 +256,11 @@ config S5PV210_SETUP_CSIS
 	default y
 	help
 	  Common setup code for MIPI-CSIS
+
+config HAVE_RFKILL_POWER_SWITCH
+        bool "Enable  power control for SMDKC110"
+        default y
+        help
+          Enables  power control function, need RFKILL
+
 endif

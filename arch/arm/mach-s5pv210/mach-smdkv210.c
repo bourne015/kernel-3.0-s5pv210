@@ -996,6 +996,11 @@ static struct platform_device bt_device_rfkill = {
 	.id	= -1,
 };
 
+static struct platform_device wwan_device_pm = {
+       .name   = "wwan-pm",
+       .id     = -1,
+};
+
 struct platform_device xr20m1170_uart = {
 	.name		= "xr20m1170-uart",
 	.id		= 0,
