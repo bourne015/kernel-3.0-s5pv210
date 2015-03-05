@@ -1664,12 +1664,17 @@ static void __init smdkv210_otg_init(void)
         s5p_otg_set_platdata(pdata);
 }
 
+unsigned int v70_hw_ver;
 static void __init smdkv210_machine_init(void)
 {
 	s3c_pm_init();
 
 	smdkv210_dm9000_init();
 	platform_add_devices(smdkv210_devices, ARRAY_SIZE(smdkv210_devices));
+
+	printk("test version\n");
+	v70_hw_ver = __raw_readl(S5P_INFORM5);
+	printk("\n v70 hardware version: v%d\n", v70_hw_ver);
 
 #ifdef CONFIG_ANDROID_PMEM
         android_pmem_set_platdata();

@@ -29,6 +29,7 @@ static atomic_t s_read_value;
 #define HOST_WAKEUP_WL_GPIO S5PV210_GPJ3(6)
 static struct work_struct wakeup_main_work;
 static struct wake_lock wakeup_main_lock;
+extern unsigned int v70_hw_ver;
 
 static void wwan_pm_wakeup_main_work(struct work_struct *work)
 {
@@ -59,7 +60,10 @@ int wwan_pm_probe(struct platform_device * pdev)
 
 	s3c_gpio_setpull(HOST_WAKEUP_WL_GPIO, S3C_GPIO_PULL_NONE);
 	s3c_gpio_cfgpin(HOST_WAKEUP_WL_GPIO, S3C_GPIO_OUTPUT);
-	gpio_set_value(HOST_WAKEUP_WL_GPIO, 1);
+	if (v70_hw_ver == 30)
+		gpio_set_value(HOST_WAKEUP_WL_GPIO, 1);
+	else
+		gpio_set_value(HOST_WAKEUP_WL_GPIO, 0);
 	INIT_WORK(&wakeup_main_work, wwan_pm_wakeup_main_work);
 
 	wakeup_main_irq = gpio_to_irq(WWAN_WAKEUP_MAIN_GPIO);
@@ -105,6 +109,8 @@ int wwan_pm_suspend(struct platform_device * pdev, pm_message_t state)
 	int err = 0;
 //	printk(KERN_ALERT "wwan_pm : wwan_pm_suspend\n");
 
+	if (v70_hw_ver != 30)
+		gpio_set_value(HOST_WAKEUP_WL_GPIO, 1);
 	if (device_may_wakeup(&pdev->dev)) {
 		#if 0
 		err = request_irq(wakeup_main_irq, wwan_pm_wakeup_main_isr, IORESOURCE_IRQ_LOWEDGE | IORESOURCE_IRQ_SHAREABLE, "wwan_wakeup", NULL);
@@ -126,6 +132,8 @@ int wwan_pm_resume(struct platform_device * pdev)
 {
 //printk(KERN_ALERT "wwan_pm : wwan_pm_resume\n");
 
+	if (v70_hw_ver != 30)
+		gpio_set_value(HOST_WAKEUP_WL_GPIO, 0);
 	if (device_may_wakeup(&pdev->dev)) {
 		disable_irq_wake(wakeup_main_irq);
 		#if 0

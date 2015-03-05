@@ -162,10 +162,6 @@ static void lte480wv_cfg_gpio(struct platform_device *pdev)
 	writel(0x000000ff, S5PV210_GPF3_BASE + 0xc);
 }
 
-#define S5PV210_GPD_0_0_TOUT_0  (0x2)
-#define S5PV210_GPD_0_1_TOUT_1  (0x2 << 4)
-#define S5PV210_GPD_0_2_TOUT_2  (0x2 << 8)
-#define S5PV210_GPD_0_3_TOUT_3  (0x2 << 12)
 static int lte480wv_backlight_on(struct platform_device *pdev)
 {
 	int err;
@@ -309,19 +305,19 @@ static int lcd_backlight_on(struct platform_device *pdev)
 {
 	int err;
 
-	err = gpio_request(S5PV210_GPD0(0), "GPD0");
+	err = gpio_request(S5PV210_GPD0(1), "GPD01");
 
 	if (err) {
-		printk(KERN_ERR "failed to request GPD0 for "
+		printk(KERN_ERR "failed to request GPD01 for "
 			"lcd backlight control\n");
 		return err;
 	}
 
-	gpio_direction_output(S5PV210_GPD0(0), 1);
+	gpio_direction_output(S5PV210_GPD0(1), 1);
+	s3c_gpio_setpull(S5PV210_GPD0(1), S3C_GPIO_PULL_NONE);
+	s3c_gpio_cfgpin(S5PV210_GPD0(1), S5PV210_GPD_0_1_TOUT_1);
 
-	s3c_gpio_cfgpin(S5PV210_GPD0(0), S5PV210_GPD_0_0_TOUT_0);
-
-	gpio_free(S5PV210_GPD0(0));
+	gpio_free(S5PV210_GPD0(1));
 
 	return 0;
 }
@@ -330,16 +326,16 @@ static int lcd_backlight_off(struct platform_device *pdev, int onoff)
 {
 	int err;
 
-	err = gpio_request(S5PV210_GPD0(0), "GPD0");
+	err = gpio_request(S5PV210_GPD0(1), "GPD0");
 	if (err) {
 		printk(KERN_ERR "failed to request GPD0 for "
 				"lcd backlight control\n");
 		return err;
 	}
 
-	gpio_direction_output(S5PV210_GPD0(0), 0);
+	gpio_direction_output(S5PV210_GPD0(1), 0);
 
-	gpio_free(S5PV210_GPD0(0));
+	gpio_free(S5PV210_GPD0(1));
 	return 0;
 }
 
@@ -624,7 +620,7 @@ struct s3c_platform_fb lcd_fb_data __initdata = {
 //#define S5P_FB_SPI_nPWREN S5PV210_MP07(6)
 #define S5P_FB_SPI_nPWREN S5PV210_GPH2(7)
 
-
+extern unsigned int v70_hw_ver;
 static int s3cfb_lq_gpio_request(void)
 {
 
@@ -691,14 +687,14 @@ static void s3cfb_set_spi_gpio_shutdown(void)
 	gpio_direction_input(S5P_FB_SPI_SDO);  //spi sdo
 	gpio_direction_input(S5P_FB_SPI_SDI);  
 	gpio_direction_input(S5P_FB_SPI_CS);   //spi cs
-	gpio_direction_output(S5P_FB_SPI_nPWREN, 1);   //spi pwr
+//	gpio_direction_output(S5P_FB_SPI_nPWREN, 1);   //spi pwr
 
 	s3c_gpio_setpull(S5P_FB_SPI_RESET, S3C_GPIO_PULL_DOWN);
 	s3c_gpio_setpull(S5P_FB_SPI_CLK, S3C_GPIO_PULL_DOWN);
 	s3c_gpio_setpull(S5P_FB_SPI_SDO, S3C_GPIO_PULL_DOWN);
 	s3c_gpio_setpull(S5P_FB_SPI_SDI, S3C_GPIO_PULL_DOWN);
 	s3c_gpio_setpull(S5P_FB_SPI_CS, S3C_GPIO_PULL_DOWN);
-	s3c_gpio_setpull(S5P_FB_SPI_nPWREN, S3C_GPIO_PULL_NONE);
+//	s3c_gpio_setpull(S5P_FB_SPI_nPWREN, S3C_GPIO_PULL_NONE);
 	s3cfb_free_gpio_lq();
 }
 
@@ -710,7 +706,10 @@ static void s3cfb_set_gpio_lq(void)
 	gpio_direction_output(S5P_FB_SPI_SDO, 1);  //spi sdo
 	gpio_direction_input(S5P_FB_SPI_SDI);  //spi sdi
 	gpio_direction_output(S5P_FB_SPI_CS, 1);   //spi cs
-	gpio_direction_output(S5P_FB_SPI_nPWREN, 0);   //spi pwr
+	if (v70_hw_ver == 30) 
+		gpio_direction_output(S5P_FB_SPI_nPWREN, 0);
+	else
+		gpio_direction_output(S5P_FB_SPI_nPWREN, 1);   //spi pwr
 
 	s3c_gpio_setpull(S5P_FB_SPI_RESET, S3C_GPIO_PULL_NONE);
 	s3c_gpio_setpull(S5P_FB_SPI_CLK, S3C_GPIO_PULL_NONE);
@@ -722,10 +721,13 @@ static void s3cfb_set_gpio_lq(void)
 
 inline void lq_spi_lcd_pwren(int value)
 {
+	if (v70_hw_ver == 30)
+		value = !value;
+
 	if(value)
-		gpio_set_value(S5P_FB_SPI_nPWREN,0);
-	else
 		gpio_set_value(S5P_FB_SPI_nPWREN,1);
+	else
+		gpio_set_value(S5P_FB_SPI_nPWREN,0);
 }
 
 inline void lq_spi_lcd_reset(int value)
@@ -1200,12 +1202,12 @@ static struct s3cfb_lcd ili9806e = {
 	.width = 480,
 	.height = 800,
 	.bpp = 32,
-        .freq   = 68,
+        .freq   = 66,
 
 	.timing = {
-		.h_fp = 8,
+		.h_fp = 15,
 		.h_bp = 13,
-		.h_sw = 3,
+		.h_sw = 8, 
 		.v_fp = 5,
 		.v_fpe = 1,
 		.v_bp = 7,

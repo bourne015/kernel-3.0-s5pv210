@@ -258,6 +258,7 @@ typedef unsigned char         FTS_BOOL;    //8 bit
 
 #define I2C_CTPM_ADDRESS       0xFF //no reference!
 
+extern unsigned int v70_hw_ver;
 
 void delay_qt_ms(unsigned long  w_ms)
 {
@@ -844,15 +845,15 @@ static void ft5x0x_ts_suspend(struct early_suspend *handler)
 //	disable_irq(this_client->irq);
 #if 1
 	disable_irq(IRQ_EINT(9));
-	s3c_gpio_setpull(TP_INT, S3C_GPIO_PULL_DOWN);
+	//s3c_gpio_setpull(TP_INT, S3C_GPIO_PULL_DOWN);
 	//gpio_direction_output(TP_INT, 0);//the code resultin tp dead, request_irq must again 
 	
 	s3c_gpio_setpull(TP_RST, S3C_GPIO_PULL_DOWN);
 	gpio_direction_output(TP_RST, 0);
-	
-	s3c_gpio_cfgpin(TP_PWR_EN, S3C_GPIO_OUTPUT);
-	s3c_gpio_setpull(TP_PWR_EN, S3C_GPIO_PULL_NONE);
-	gpio_set_value(TP_PWR_EN, 1);	
+	msleep(100);
+//	s3c_gpio_cfgpin(TP_PWR_EN, S3C_GPIO_OUTPUT);
+//	s3c_gpio_setpull(TP_PWR_EN, S3C_GPIO_PULL_NONE);
+//	gpio_set_value(TP_PWR_EN, 1);	
 	
 	cancel_work_sync(&ts->pen_event_work);
 	flush_workqueue(ts->ts_workqueue);
@@ -886,7 +887,10 @@ static void ft5x0x_ts_resume(struct early_suspend *handler)
 #if 1
 	s3c_gpio_cfgpin(TP_PWR_EN, S3C_GPIO_OUTPUT);
 	s3c_gpio_setpull(TP_PWR_EN, S3C_GPIO_PULL_NONE);
-	gpio_set_value(TP_PWR_EN, 0);
+	if (v70_hw_ver == 30)
+		gpio_set_value(TP_PWR_EN, 0);
+	else
+		gpio_set_value(TP_PWR_EN, 1);
 	
 	s3c_gpio_setpull(TP_RST, S3C_GPIO_PULL_NONE);
 	gpio_direction_output(TP_RST, 0);
@@ -944,7 +948,10 @@ ft5x0x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	
 	s3c_gpio_cfgpin(TP_PWR_EN, S3C_GPIO_OUTPUT);
 	s3c_gpio_setpull(TP_PWR_EN, S3C_GPIO_PULL_NONE);
-	gpio_set_value(TP_PWR_EN, 0);
+	if (v70_hw_ver == 30)
+		gpio_set_value(TP_PWR_EN, 0);
+	else
+		gpio_set_value(TP_PWR_EN, 1);
 
    	if(gpio_request(TP_RST, "TP_RST")) {
 		printk("TP_RST error!\n");
