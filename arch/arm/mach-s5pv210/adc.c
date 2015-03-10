@@ -304,7 +304,7 @@ static int __devinit s3c_adc_probe(struct platform_device *pdev)
 
 	size = (res->end - res->start) + 1;
 
-#if !defined(ADC_WITH_TOUCHSCREEN)
+#if 0//!defined(ADC_WITH_TOUCHSCREEN)
 	adc_mem = request_mem_region(res->start, size, pdev->name);
 	if (adc_mem == NULL) {
 		dev_err(dev, "failed to get memory region\n");

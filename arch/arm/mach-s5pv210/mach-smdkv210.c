@@ -1025,7 +1025,7 @@ static struct s3c_adc_mach_info s3c_adc_platform __initdata = {
 #endif
 
 static struct platform_device *smdkv210_devices[] __initdata = {
-	&s3c_device_adc,
+	&s3c_device_adc1,
 	&s3c_device_cfcon,
 	&s3c_device_fb,
 	&s3c_device_hsmmc0,

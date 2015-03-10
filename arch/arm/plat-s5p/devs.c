@@ -392,8 +392,8 @@ struct platform_device s5p_device_hpd = {
 /* ADCTS */
 static struct resource s3c_adc_resource[] = {
 	[0] = {
-		.start = SAMSUNG_PA_ADC,
-		.end   = SAMSUNG_PA_ADC + SZ_4K - 1,
+		.start = S5PV210_PA_ADC,
+		.end   = S5PV210_PA_ADC + SZ_4K - 1,
 		.flags = IORESOURCE_MEM,
 	},
 	[1] = {
