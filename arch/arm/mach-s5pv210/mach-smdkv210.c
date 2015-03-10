@@ -1007,6 +1007,11 @@ struct platform_device xr20m1170_uart = {
 	.id		= 0,
 };
 
+struct platform_device v70_device_battery = {
+	.name   = "v70-battery",
+	.id = -1,
+};
+
 #ifndef CONFIG_S5P_ADC
 struct s3c_adc_mach_info {
         /* if you need to use some platform data, add in here*/
@@ -1032,6 +1037,7 @@ static struct platform_device *smdkv210_devices[] __initdata = {
 	&s3c_device_hsmmc1,
 	&s3c_device_hsmmc2,
 	&s3c_device_hsmmc3,
+	&v70_device_battery,
 	&s3c_device_i2c0,
 	&s3c_device_i2c1,
 	&s3c_device_i2c2,
