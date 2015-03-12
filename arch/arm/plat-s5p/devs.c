@@ -428,3 +428,39 @@ void __init s3c_adc_set_platdata(struct s3c_adc_mach_info *pd)
 	}
 }
 #endif /* CONFIG_S5P_ADC */
+
+/******************************************************************************
+ * gpio keypad
+ ******************************************************************************/
+
+//#ifdef CONFIG_KEYBOARD_GPIO
+#include <linux/input.h>
+#include <linux/gpio_keys.h>
+static struct gpio_keys_button gpio_buttons[] = {
+	{
+		.gpio		= S5PV210_GPH1(0),
+		.code		= KEY_POWER,
+		.desc		= "POWER",
+		.active_low	= 1,
+		.wakeup		= 1,
+		.debounce_interval = 5,
+		.can_disable = 1,
+	},	
+
+};
+
+static struct gpio_keys_platform_data gpio_button_data = {
+	.buttons	= gpio_buttons,
+	.nbuttons	= ARRAY_SIZE(gpio_buttons),
+};
+
+struct platform_device s3c_device_gpio_button = {
+	.name		= "gpio-keys",
+	.id		= -1,
+	.num_resources	= 0,
+	.dev		= {
+		.platform_data	= &gpio_button_data,
+	}
+};
+//#endif
+

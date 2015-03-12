@@ -164,6 +164,7 @@ extern struct platform_device s3c_device_fimc2;
 extern struct platform_device s5pv210_device_cpufreq;
 
 extern struct platform_device s3c_device_adc1;
+extern struct platform_device s3c_device_gpio_button;
 /* s3c2440 specific devices */
 
 #ifdef CONFIG_CPU_S3C2440

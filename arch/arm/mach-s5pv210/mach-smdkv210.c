@@ -1115,6 +1115,7 @@ static struct platform_device *smdkv210_devices[] __initdata = {
 #endif
 	&bt_device_rfkill,
 	&xr20m1170_uart,
+	&s3c_device_gpio_button,
 };
 /*
  * External camera reset
