@@ -975,7 +975,7 @@ static void smdkv210_backlight_exit(struct device *dev)
 }
 
 static struct platform_pwm_backlight_data smdkv210_backlight_data = {
-	.pwm_id		= 3,
+	.pwm_id		= 1,
 	.max_brightness	= 255,
 	.dft_brightness	= 255,
 	.lth_brightness = 50,
@@ -987,7 +987,7 @@ static struct platform_pwm_backlight_data smdkv210_backlight_data = {
 static struct platform_device smdkv210_backlight_device = {
 	.name		= "pwm-backlight",
 	.dev		= {
-		.parent		= &s3c_device_timer[3].dev,
+		.parent		= &s3c_device_timer[1].dev,
 		.platform_data	= &smdkv210_backlight_data,
 	},
 };
@@ -1063,6 +1063,9 @@ static struct platform_device *smdkv210_devices[] __initdata = {
 	&samsung_device_keypad,
 	&smdkv210_dm9000,
 	&smdkv210_lcd_lte480wv,
+	&s3c_device_timer[0],
+	&s3c_device_timer[1],
+	&s3c_device_timer[2],
 	&s3c_device_timer[3],
 	&smdkv210_backlight_device,
 	&s5p_device_ehci,
