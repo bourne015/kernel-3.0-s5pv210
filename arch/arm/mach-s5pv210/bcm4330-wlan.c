@@ -209,9 +209,9 @@ static int brcm_wlan_power(int onoff)
                 printk(KERN_INFO"WLAN: GPIO_WLAN_EN = %d\n",
                 gpio_get_value(GPIO_WLAN_EN));
 
-		 //s3c_gpio_slp_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_SLP_OUT1);
-			//s3c_gpio_slp_setpull_updown(GPIO_WLAN_BT_EN,
-					//S3C_GPIO_PULL_NONE);
+		 s3c_gpio_slp_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_SLP_OUT1);
+			s3c_gpio_slp_setpull_updown(GPIO_WLAN_BT_EN,
+					S3C_GPIO_PULL_NONE);
         } else {
                 //gpio_set_value(GPIO_WLAN_EN, GPIO_LEVEL_LOW);
                 s3c_config_gpio_alive_table
@@ -223,9 +223,9 @@ static int brcm_wlan_power(int onoff)
 		  	s3c_gpio_setpull(GPIO_WLAN_BT_EN, S3C_GPIO_PULL_NONE);
 			s3c_gpio_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_OUTPUT);
 			gpio_set_value(GPIO_WLAN_BT_EN, GPIO_LEVEL_LOW);
-			//s3c_gpio_slp_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_SLP_OUT0);
-			//s3c_gpio_slp_setpull_updown(GPIO_WLAN_BT_EN,
-			//			S3C_GPIO_PULL_DOWN);
+			s3c_gpio_slp_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_SLP_OUT0);
+			s3c_gpio_slp_setpull_updown(GPIO_WLAN_BT_EN,
+						S3C_GPIO_PULL_DOWN);
 		  }
         }
         return 0;
