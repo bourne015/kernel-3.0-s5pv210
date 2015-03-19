@@ -222,7 +222,6 @@ int suspend_devices_and_enter(suspend_state_t state)
 	suspend_test_finish("suspend devices");
 	if (suspend_test(TEST_DEVICES))
 		goto Recover_platform;
-
 	error = suspend_enter(state);
 
  Resume_devices:
@@ -311,7 +310,7 @@ int enter_state(suspend_state_t state)
 int pm_suspend(suspend_state_t state)
 {
 	if (state > PM_SUSPEND_ON && state <= PM_SUSPEND_MAX)
-		return enter_state(state);
+//		return enter_state(state);
 	return -EINVAL;
 }
 EXPORT_SYMBOL(pm_suspend);
