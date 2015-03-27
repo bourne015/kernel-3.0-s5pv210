@@ -1682,6 +1682,9 @@ static void __init smdkv210_machine_init(void)
 	smdkv210_dm9000_init();
 	platform_add_devices(smdkv210_devices, ARRAY_SIZE(smdkv210_devices));
 
+	extern void s5pv210_init_gpio(void);
+	s5pv210_init_gpio();
+
 	printk("test version\n");
 	v70_hw_ver = __raw_readl(S5P_INFORM5);
 	printk("\n v70 hardware version: v%d\n", v70_hw_ver);

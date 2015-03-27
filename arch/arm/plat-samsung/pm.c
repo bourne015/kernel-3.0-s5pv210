@@ -250,6 +250,9 @@ void (*pm_cpu_sleep)(void);
 
 #define any_allowed(mask, allow) (((mask) & (allow)) != (allow))
 
+extern void s5pc110_platform_proc(void);
+extern void s3c_config_sleep_gph_table(void);
+extern void s3c_print_sleep_gph_table(void);
 /* s3c_pm_enter
  *
  * central control for sleep/resume process
@@ -286,6 +289,8 @@ static int s3c_pm_enter(suspend_state_t state)
 	s3c_pm_save_uarts();
 	s3c_pm_save_core();
 
+	s3c_config_sleep_gph_table();
+	s3c_print_sleep_gph_table();
 	/* set the irq configuration for wake */
 
 	s3c_pm_configure_extint();
