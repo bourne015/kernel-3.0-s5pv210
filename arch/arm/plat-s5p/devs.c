@@ -11,6 +11,7 @@
 */
 
 #include <linux/gpio.h>
+#include <linux/leds.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 
@@ -24,6 +25,57 @@
 #include <plat/jpeg.h>
 #include <mach/media.h>
 #include <mach/adc.h>
+
+#ifdef CONFIG_LEDS_GPIO
+static struct gpio_led gpio_leds[] = {
+#if 1
+	  {
+                 .name   = "led_blue",
+                 .gpio   = S5PV210_GPJ3(0),
+                 .active_low = 0,
+                 .default_state = LEDS_GPIO_DEFSTATE_OFF,
+         },
+         {
+                 .name   = "led_yellow",
+                 .gpio   = S5PV210_GPJ3(1),
+                 .active_low = 0,
+                 .default_state = LEDS_GPIO_DEFSTATE_OFF,
+         },
+         {
+                  .name   = "led_green",
+                  .gpio   = S5PV210_GPJ3(2),
+                  .active_low = 0,
+                  .default_state = LEDS_GPIO_DEFSTATE_ON,
+          },
+          {
+                  .name   = "led_red",
+                  .gpio   = S5PV210_GPJ3(3),
+                  .active_low = 0,
+                  .default_state = LEDS_GPIO_DEFSTATE_OFF,
+          },
+#endif
+	  {
+                 .name   = "button-backlight",
+                 .gpio   =  S5PV210_GPC1(1),
+                 .active_low = 0,
+                 .default_state = LEDS_GPIO_DEFSTATE_OFF,
+         },
+};
+
+static struct gpio_led_platform_data gpio_led_info = {
+         .leds           = gpio_leds,
+        .num_leds       = ARRAY_SIZE(gpio_leds),
+};
+
+struct platform_device s3c_device_led = {
+         .name   = "leds-gpio",
+         .id     = -1,
+         .dev    = {
+                 .platform_data  = &gpio_led_info,
+         },
+};
+#endif
+
 #if defined(CONFIG_VIDEO_FIMC) || defined(CONFIG_CPU_FREQ) /* TODO: use existing dev */
 static struct resource s3c_fimc0_resource[] = {
 	[0] = {

@@ -18,8 +18,19 @@
 #include <linux/of_gpio.h>
 #include <linux/slab.h>
 #include <linux/workqueue.h>
+#include <linux/fs.h>
+#include <linux/miscdevice.h>
 
 #include <asm/gpio.h>
+
+#define LEDS_GPIO_IOC_MAGIC		'L'
+#define LEDS_GPIO_IOCTL		_IOW(LEDS_GPIO_IOC_MAGIC, 1, int)
+
+#if 0
+	#define DEBUG	printk
+#else
+	#define DEBUG(...)
+#endif
 
 struct gpio_led_data {
 	struct led_classdev cdev;
@@ -231,12 +242,75 @@ static struct gpio_leds_priv * __devinit gpio_leds_create_of(struct platform_dev
 #define of_gpio_leds_match NULL
 #endif
 
+struct gpio_led_platform_data *pdata;
+static int led_open(struct inode *inode, struct file *filp)
+{
+	int ret = 0;
+	return ret;
+}
+
+static long led_ioctl(struct file *filp, unsigned int cmd, unsigned long args)
+{
+	int ret = 0;
+	int tmp_args = (int)args;
+
+	DEBUG("###cgh:tmp_args:%d\n",tmp_args);
+
+	switch (cmd) {
+		case LEDS_GPIO_IOCTL:
+			switch (tmp_args/10) {
+				case 1:
+					gpio_set_value_cansleep(pdata->leds[0].gpio, tmp_args%10 ? 1 : 0);//led_blue
+					break;
+				case 2:
+					gpio_set_value_cansleep(pdata->leds[1].gpio, tmp_args%10 ? 1 : 0);//led_yellow
+					break;
+				case 3:
+					gpio_set_value_cansleep(pdata->leds[2].gpio, tmp_args%10 ? 1 : 0);//led_green
+					break;
+				case 4:
+					gpio_set_value_cansleep(pdata->leds[3].gpio, tmp_args%10 ? 1 : 0);//led_red
+					break;
+
+				default:
+					printk("invalid tmp_args:%d\n",tmp_args);
+					break;
+			}
+			break;
+
+			default:
+				printk("invalid cmd:%d\n",cmd);
+				break;
+
+	}
+	return ret;
+}
+
+static int led_release(struct inode *inode, struct file *filp)
+{
+	int ret = 0;
+	return ret;
+}
+
+struct file_operations led_gpio_ops = {
+	.open       = led_open,
+	.unlocked_ioctl      = led_ioctl,
+	.release    = led_release,
+};
+
+struct miscdevice leds_gpio = {
+	.name = "leds_gpio",
+	.minor= MISC_DYNAMIC_MINOR,
+	.fops = &led_gpio_ops,
+};
 
 static int __devinit gpio_led_probe(struct platform_device *pdev)
 {
-	struct gpio_led_platform_data *pdata = pdev->dev.platform_data;
+//	struct gpio_led_platform_data *pdata = pdev->dev.platform_data;
 	struct gpio_leds_priv *priv;
 	int i, ret = 0;
+
+	pdata = pdev->dev.platform_data;
 
 	if (pdata && pdata->num_leds) {
 		priv = kzalloc(sizeof_gpio_leds_priv(pdata->num_leds),
@@ -265,7 +339,8 @@ static int __devinit gpio_led_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, priv);
 
-	return 0;
+	ret = misc_register(&leds_gpio);
+	return ret;
 }
 
 static int __devexit gpio_led_remove(struct platform_device *pdev)
@@ -279,6 +354,7 @@ static int __devexit gpio_led_remove(struct platform_device *pdev)
 	dev_set_drvdata(&pdev->dev, NULL);
 	kfree(priv);
 
+	misc_deregister(&leds_gpio);
 	return 0;
 }
 
