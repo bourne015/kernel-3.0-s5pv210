@@ -78,6 +78,7 @@
 #include <plat/otg.h>
 #include <plat/ehci.h>
 #include <plat/ohci.h>
+#include <plat/watchdog-reset.h>
 #include <../../../drivers/video/samsung/s3cfb.h>
 #include <mach/regs-gpio.h>
 #include <mach/gpio.h>
@@ -1598,6 +1599,25 @@ static struct s3c2410_ts_mach_info s3c_ts_platform __initdata = {
 
 };
 
+#define S5PV210_PS_HOLD_CONTROL_REG (S3C_VA_SYS+0xE81C)
+static void smdkc210_power_off(void)
+{
+	/* PS_HOLD output High --> Low */
+	while(1){
+	       if (!gpio_get_value(S5PV210_GPH0(3))) {
+	               printk(KERN_ALERT "charger connected, rebooting\n");
+	               writel(3, S5P_INFORM6);
+	               //arch_reset('r', NULL);
+	               arch_wdt_reset();
+	       } else {
+		   		if (gpio_get_value(GPIO_nPOWER)) {
+	              	writel(readl(S5PV210_PS_HOLD_CONTROL_REG) & 0xFFFFFEFF,
+					S5PV210_PS_HOLD_CONTROL_REG);	
+				}
+	       }
+	   }
+	//while (1);
+}
 
 static void __init smdkv210_map_io(void)
 {
@@ -1692,6 +1712,8 @@ static void __init smdkv210_machine_init(void)
 	printk("test version\n");
 	v70_hw_ver = __raw_readl(S5P_INFORM5);
 	printk("\n v70 hardware version: v%d\n", v70_hw_ver);
+
+	pm_power_off = smdkc210_power_off ;
 
 #ifdef CONFIG_ANDROID_PMEM
         android_pmem_set_platdata();
